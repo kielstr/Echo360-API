@@ -21,8 +21,13 @@ my $echo360 = Echo360->new(
 ); 
 
 my $org = $echo360->get(URI => 'organizations', MATCH => "^$org_name\$");
+die "Could not find organization $org_name" unless $org;
+
 my $building = $echo360->get(URI => 'buildings', MATCH => "^$building_name\$");
+die "Could not find building $building_name" unless $building;
+
 my $room = $echo360->get(URI => 'rooms', MATCH => "^$room_name\$");
+die "Could not find room $room_name" unless $room;
 
 my %args = (
 	'name' => '<![CDATA[Kiels Test Room]]>',

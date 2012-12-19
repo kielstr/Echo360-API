@@ -21,13 +21,8 @@ my $echo360 = Echo360->new(
 ); 
 
 my $person = $echo360->get(URI => 'people', PARAMS => "term=$person_name");
-die "Could not find person $person" unless $person;
-
 my $term = $echo360->get(URI => 'terms', PARAMS => "term=$term_name");
-die "Could not find term $term_name" unless $term;
-
 my $course = $echo360->get(URI => 'courses', PARAMS => "term=$course_name");
-die "Could not find course $course_name" unless $course;
 
 my %args = (
 	'name' => '<![CDATA[kiels-test-section]]>',

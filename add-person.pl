@@ -19,6 +19,7 @@ my $echo360 = Echo360->new(
 ); 
 
 my $org = $echo360->get(URI => 'organizations', MATCH => "^$org_name\$");
+die "Could not find oranization $org_name" unless $org;
 
 my %args = (
 	'title' => '<![CDATA[Mr]]>',
@@ -46,6 +47,5 @@ my %args = (
 my $p = XML::Simple->new(NoAttr => 1, KeyAttr => {});
 my $xml = $p->XMLout(\%args, RootName=> 'person', NoEscape => 1);	
 
-print $xml;
-
-$echo360->add("people", $xml);
+my $person = $echo360->add("people", $xml);
+print "Added $person->{id}";

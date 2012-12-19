@@ -35,6 +35,7 @@ sub new {
 	}
 	
 	return bless \%cfg, $self;
+
 }
 
 sub get {
@@ -100,23 +101,6 @@ sub update {
 	print "PUT URI: $uri\n" if $self->{DEBUG};
 	
 	my $resp = $self->_send('PUT', "$uri", $xml);
-
-	if ($resp and $resp->code >= 400) {
-		$self->{_ERROR} = [$self->_parse_error($resp)]; 
-		croak $self->errstr;
-	}
-
-	my $ret = XML::Simple->new()->XMLin($resp->content) if $resp->content;
-	return $ret; 
-}
-
-sub delete {
-	my ($self, $uri, $xml) = @_;
-	$uri = "/$uri" unless $uri =~/^\//;
-
-	print "DELETE URI: $uri\n" if $self->{DEBUG};
-	
-	my $resp = $self->_send('DELETE', $uri);
 
 	if ($resp and $resp->code >= 400) {
 		$self->{_ERROR} = [$self->_parse_error($resp)]; 

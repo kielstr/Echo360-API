@@ -10,6 +10,7 @@ use XML::Simple;
 use Data::Dumper;
 
 my $campus_name = shift || die "No campus name";
+my $building_name = shift || die "No building name";
 
 my $echo360 = Echo360->new(
 	USERNAME => 'kiel-test',
@@ -19,9 +20,10 @@ my $echo360 = Echo360->new(
 ); 
 
 my $campus = $echo360->get(URI => 'campuses', MATCH => "^$campus_name\$");
+die "Could not find campus $campus_name" unless $campus; 
 
 my %args = (
-	name => '<![CDATA[Kiels Test Building]]>',
+	name => "<![CDATA[$building_name]]>",
 	campus => "<![CDATA[$campus->{$campus_name}{id}]]>",
 );
 

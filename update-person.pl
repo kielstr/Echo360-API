@@ -21,7 +21,10 @@ my $echo360 = Echo360->new(
 ); 
 
 my $org = $echo360->get(URI => 'organizations', MATCH => "^$org_name\$");
+die "Could not find organization $org_name" unless $org;
+
 my $person = $echo360->get(URI => 'people', PARAMS => "term=$person_name");
+die "Could not find person $person_name" unless $person;
 
 my %args = (
 	'title' => '<![CDATA[Mr]]>',

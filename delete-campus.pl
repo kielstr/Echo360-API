@@ -6,10 +6,9 @@ use warnings;
 use FindBin qw($Bin);
 use lib "$Bin/lib";
 use Echo360;
-use XML::Simple;
 use Data::Dumper;
 
-my $campus_name = shift || die "No campus supplied";
+my $campus_name = shift || die "No campus name";
 
 my $echo360 = Echo360->new(
 	USERNAME => 'kiel-test',
@@ -21,12 +20,4 @@ my $echo360 = Echo360->new(
 my $campus = $echo360->get(URI => '/campuses', MATCH => "^$campus_name\$");
 die "Could not find campus $campus_name" unless $campus;
 
-my %args = (
-	'name' => '<![CDATA[Kiel Test Campus]]>',
-	'time-zone-name' => '<![CDATA[Australia/Sydney]]>',
-);
-
-my $p = XML::Simple->new(NoAttr => 1, KeyAttr => {});
-my $xml = $p->XMLout(\%args, RootName=> 'campus', NoEscape => 1);	
-
-$echo360->update("/campuses/$campus->{$campus_name}{id}", $xml);
+$echo360->delete("/campuses/$campus->{$campus_name}{id}");

@@ -10,6 +10,8 @@ use XML::Simple;
 use Data::Dumper;
 
 my $org_name = shift || die "No Organization name";
+my $course_name = shift || die "No Course name";
+my $course_ident = shift || die "No Course Identifier";
 
 my $echo360 = Echo360->new(
 	USERNAME => 'kiel-test',
@@ -18,12 +20,13 @@ my $echo360 = Echo360->new(
 	URL => 'https://ecessqa01.csumain.csu.edu.au:8443/ess/scheduleapi/v1',
 ); 
 
-my $orgs = $echo360->get(URI => 'organizations', MATCH => "^$org_name\$");
+my $org = $echo360->get(URI => 'organizations', MATCH => "^$org_name\$");
+die "Could not find organization $org_name" unless $org;
 
 my %args = (
-	'name' => 'kiels-test-course',
-	'identifier' => 'kiels-test-course',
-	'organization-id' => $orgs->{CSU}{id}
+	'name' => $course_name,
+	'identifier' => $course_ident,
+	'organization-id' => $org->{$org_name}{id}
 );
 
 my %xml_args = map {$_ => '<![CDATA['.$args{$_}.']]>'} keys %args;

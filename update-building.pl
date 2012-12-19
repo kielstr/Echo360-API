@@ -19,6 +19,7 @@ my $echo360 = Echo360->new(
 ); 
 
 my $building = $echo360->get(URI => 'buildings', MATCH => "^$building_name\$");
+die "Could not find building $builing_name" unless $building;
 
 my %args = (
 	name => '<![CDATA[Kiels Test Building]]>',

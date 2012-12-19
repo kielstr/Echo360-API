@@ -20,7 +20,10 @@ my $echo360 = Echo360->new(
 ); 
 
 my $org = $echo360->get(URI => 'organizations', MATCH => "^$org_name\$");
+die "Could not find organization $org_name" unless $org;
+
 my $term = $echo360->get(URI => 'terms', PARAMS => "term=$term_name");
+die "Could not find term $term_name" unless $term;
 
 my %args = (
 	'name' => $term_name,

@@ -12,6 +12,7 @@ use Data::Dumper;
 my $person_name = shift || die "No name";
 my $term_name = shift || die "No term";
 my $course_name = shift || die "No course";
+my $section_name = shift || die "No section name";
 
 my $echo360 = Echo360->new(
 	USERNAME => 'kiel-test',
@@ -21,7 +22,7 @@ my $echo360 = Echo360->new(
 ); 
 
 my $person = $echo360->get(URI => 'people', PARAMS => "term=$person_name");
-die "Could not find person $person" unless $person;
+die "Could not find person $person_name" unless $person;
 
 my $term = $echo360->get(URI => 'terms', PARAMS => "term=$term_name");
 die "Could not find term $term_name" unless $term;
@@ -29,8 +30,11 @@ die "Could not find term $term_name" unless $term;
 my $course = $echo360->get(URI => 'courses', PARAMS => "term=$course_name");
 die "Could not find course $course_name" unless $course;
 
+my $section = $echo360->get(URI => "/terms/$term->{id}/courses/$course->{id}/sections");
+die "Could not find section for term $term_name course $course_name" unless $section;
+
 my %args = (
-	'name' => '<![CDATA[kiels-test-section]]>',
+	'name' => "<![CDATA[$section_name]]>",
 	'section-roles' => {
 		'section-role' => {
 			'person-id' => "<![CDATA[$person->{id}]]>",
@@ -55,4 +59,4 @@ my %args = (
 my $p = XML::Simple->new(NoAttr => 1, KeyAttr => {});
 my $xml = $p->XMLout(\%args, RootName=> 'section', NoEscape => 1);	
 
-$echo360->add("terms/$term->{id}/courses/$course->{id}/sections", $xml);
+$echo360->update("sections/$section->{section}{id}", $xml);

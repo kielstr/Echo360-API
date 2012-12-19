@@ -10,6 +10,9 @@ use XML::Simple;
 use Data::Dumper;
 
 my $org_name = shift || die "No organization name";
+my $term_name = shift || die "No term name";
+my $term_start = shift || die "No term start date YYYY-MM-dd";
+my $term_end = shift || die "No term end date YYYY-MM-dd";
 
 my $echo360 = Echo360->new(
 	USERNAME => 'kiel-test',
@@ -19,12 +22,13 @@ my $echo360 = Echo360->new(
 ); 
 
 my $org = $echo360->get(URI => 'organizations', MATCH => "^$org_name\$");
+die "Could not find organization $org_name" unless $org;
 
 my %args = (
-	'name' => 'kiels-test-term',
-	'organization-id' => $org->{CSU}{id},
-	'start-date' => '2012-01-01',
-	'end-date' => '2013-12-01'
+	'name' => $term_name,
+	'organization-id' => $org->{$org_name}{id},
+	'start-date' => $term_start,
+	'end-date' => $term_end,
 );
 
 my %xml_args = map {$_ => '<![CDATA['.$args{$_}.']]>'} keys %args;

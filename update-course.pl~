@@ -11,7 +11,6 @@ use Data::Dumper;
 
 my $org_name = shift || die "No Organization name";
 my $course_name = shift || die "No Course name";
-my $course_ident = shift || die "No Course identifier";
 
 my $echo360 = Echo360->new(
 	USERNAME => 'kiel-test',
@@ -21,14 +20,11 @@ my $echo360 = Echo360->new(
 ); 
 
 my $orgs = $echo360->get(URI => 'organizations', MATCH => "^$org_name\$");
-die "Could not find organization $org_name" unless $org;
-
 my $course = $echo360->get(URI => 'courses', MATCH => "^$course_name\$");
-die "Could not find course $course_name" unless $course;
 
 my %args = (
-	'name' => $course_name,
-	'identifier' => $course_ident,
+	'name' => 'kiels-test-course',
+	'identifier' => 'kiels-test-course',
 	'organization-id' => $orgs->{$org_name}{id}
 );
 
